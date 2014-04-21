@@ -1,3 +1,8 @@
+# Emacs Proxy
+This is a simple fork of Sublime Proxy, which makes it work with Emacs instead of
+Sublime. The original Sublime Proxy readme follows:
+
+
 # Sublime Proxy
 
 Hey,
