@@ -18,8 +18,8 @@
 - (void)handleAppleEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent {
     NSTask *task;
     task = [[NSTask alloc] init];
-    [task setLaunchPath:@"/Applications/Sublime\ Text\ 2.app\/Contents/SharedSupport/bin/subl"];
-    
+    //[task setLaunchPath:@"/Applications/Sublime\ Text\ 2.app\/Contents/SharedSupport/bin/subl"];
+    [task setLaunchPath:@"/usr/local/bin/emacsclient"];
     NSData *eventData = [event data];
     
     unsigned char *buffer = malloc(sizeof(UInt16));
@@ -31,11 +31,15 @@
     x += 1;
     
     const AEKeyword filekey  = '----';
-    NSString *filepath = [[[event descriptorForKeyword:filekey] stringValue] substringFromIndex:16];
-    NSString *filepathWithLine = [NSString stringWithFormat:@"%@:%d", filepath, x];
-    filepathWithLine = [filepathWithLine stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString *filepath = [[[event descriptorForKeyword:filekey] stringValue] substringFromIndex:7];
+    //NSString *filepathWithLine = [NSString stringWithFormat:@"%@", filepath];
+    NSString *filepathWithLine = [NSString stringWithFormat:@"%@", filepath];
+    NSString *linenum = [NSString stringWithFormat:@"+%d", x];
+    //NSString *filepathWithLine = [NSString stringWithFormat:@"%@:%d", filepath, x];
+    //filepathWithLine = [filepathWithLine stringByExpandingTildeInPath];
+    filepathWithLine = [filepathWithLine stringByReplacingPercentEscapesUsingEncoding: NSASCIIStringEncoding];
     NSArray *arguments;
-    arguments = [NSArray arrayWithObjects: filepathWithLine, nil];
+    arguments = [NSArray arrayWithObjects: @"-n", linenum, filepathWithLine, nil];
     [task setArguments: arguments];
     
     [task launch];
